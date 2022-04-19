@@ -218,7 +218,7 @@ ORDER BY customer_id;
 
 ###  9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 
-#### Had the customer joined the loyalty program before making the purchases, total points that each customer would have
+#### Had the customer joined the loyalty program before making the purchases, total points that each customer would have accrued
 ```sql
 SELECT customer_id,
        SUM(CASE
@@ -238,7 +238,7 @@ ORDER BY customer_id;
 | B           | 940             |
 | C           | 360             |
 
-#### Total points that each customer has after taking a membership
+#### Total points that each customer has accrued after taking a membership
 ```sql
 SELECT s.customer_id,
        SUM(CASE
