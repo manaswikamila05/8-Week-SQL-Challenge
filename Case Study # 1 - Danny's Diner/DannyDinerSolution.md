@@ -270,7 +270,7 @@ FROM dannys_diner.menu AS m
 INNER JOIN dannys_diner.sales AS s ON m.product_id = s.product_id
 INNER JOIN dannys_diner.members AS mem ON mem.customer_id = s.customer_id
 WHERE order_date >= join_date
-  AND order_date BETWEEN join_date AND join_date+6
+  AND order_date BETWEEN join_date AND join_date+7
 GROUP BY s.customer_id
 ORDER BY s.customer_id;
 ``` 
@@ -279,7 +279,7 @@ ORDER BY s.customer_id;
 | customer_id | customer_points |
 | ----------- | --------------- |
 | A           | 1020            |
-| B           | 200             |
+| B           | 440             |
 
 ***
 
