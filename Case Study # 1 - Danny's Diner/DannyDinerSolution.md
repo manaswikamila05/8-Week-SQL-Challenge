@@ -263,14 +263,35 @@ ORDER BY s.customer_id;
 
 ###  10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January
 
+#### Steps
+1. Find the program_last_date which is 7 days after a customer joins the program (including their join date)
+2. Determine the customer points for each transaction and for members with a membership
+- During the first week of the membership -> points = price*20 irrespective of the purchase item
+- Product = Sushi -> and order_date is not within a week of membership -> points = price*20
+- Product = Not Sushi -> and order_date is not within a week of membership -> points = price*10
+3. Conditions in WHERE clause
+- order_date <= '2021-01-31' -> Order must be placed before 31st January 2021
+- order_date >= join_date -> Points awarded to only customers with a membership
+
 ```sql
+WITH program_last_day_cte AS
+  (SELECT join_date,
+          DATE_ADD(join_date, INTERVAL 7 DAY) AS program_last_date,
+          customer_id
+   FROM dannys_diner.members)
 SELECT s.customer_id,
-       SUM(price*20) AS customer_points
+       SUM(CASE
+               WHEN order_date BETWEEN join_date AND program_last_date THEN price*10*2
+               WHEN order_date NOT BETWEEN join_date AND program_last_date
+                    AND product_name = 'sushi' THEN price*10*2
+               WHEN order_date NOT BETWEEN join_date AND program_last_date
+                    AND product_name != 'sushi' THEN price*10
+           END) AS customer_points
 FROM dannys_diner.menu AS m
 INNER JOIN dannys_diner.sales AS s ON m.product_id = s.product_id
-INNER JOIN dannys_diner.members AS mem ON mem.customer_id = s.customer_id
-WHERE order_date >= join_date
-  AND order_date BETWEEN join_date AND join_date+7
+INNER JOIN program_last_day_cte AS mem ON mem.customer_id = s.customer_id
+AND order_date <='2021-01-31'
+AND order_date >=join_date
 GROUP BY s.customer_id
 ORDER BY s.customer_id;
 ``` 
