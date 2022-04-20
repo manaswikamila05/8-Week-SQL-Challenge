@@ -172,7 +172,7 @@ WITH diner_info AS
           join_date,
           m.product_id,
           DENSE_RANK() OVER(PARTITION BY s.customer_id
-                            ORDER BY s.order_date DESC) AS first_item
+                            ORDER BY s.order_date DESC) AS item_rank
    FROM dannys_diner.menu AS m
    INNER JOIN dannys_diner.sales AS s ON m.product_id = s.product_id
    INNER JOIN dannys_diner.members AS mem ON mem.customer_id = s.customer_id
@@ -182,7 +182,7 @@ SELECT customer_id,
        order_date,
        join_date
 FROM diner_info
-WHERE first_item=1;
+WHERE item_rank=1;
 ``` 
 	
 #### Result set:
