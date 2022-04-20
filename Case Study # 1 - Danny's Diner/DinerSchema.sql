@@ -1,10 +1,10 @@
---------------------------------
-CASE STUDY #1: DANNY'S DINER
---------------------------------
+----------------------------------
+-- CASE STUDY #1: DANNY'S DINER --
+----------------------------------
 
---Author: Manaswi Kamila
---Date: 18/04/2022 
---Tool used: MS SQL Server
+-- Author: Manaswi Kamila
+-- Date: 18/04/2022 
+-- Tool used: MySQL Server
 
 
  
