@@ -212,3 +212,5 @@ ORDER BY 2 DESC;
 ![image](https://user-images.githubusercontent.com/77529445/164612599-c3903593-98e1-4fec-8076-9aa14d9601f9.png)
 
 ***
+
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Runner%20and%20Customer%20Experience.md) for solution for B. Runner and Customer Experience!
