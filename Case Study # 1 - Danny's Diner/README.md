@@ -1,4 +1,4 @@
-#  Case Study #1: Danny's Diner 
+# :ramen: :curry: :sushi: Case Study #1: Danny's Diner 
 <img src="https://8weeksqlchallenge.com/images/case-study-designs/1.png" alt="Image" width="450" height="450">
 
 View the case study [here](https://8weeksqlchallenge.com/case-study-1/)
