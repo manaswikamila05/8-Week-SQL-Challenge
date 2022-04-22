@@ -1,4 +1,5 @@
 # :pizza: Case Study #2: Pizza Runner
+<p align="center">
 <img src="https://8weeksqlchallenge.com/images/case-study-designs/2.png" alt="Image" width="450" height="450">
 
 View the case study [here](https://8weeksqlchallenge.com/case-study-2/)
