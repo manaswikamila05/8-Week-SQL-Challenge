@@ -13,12 +13,19 @@
 ***
 
 ###  1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
+- Returned week number is between 0 and 52 or 0 and 53.
+- Default mode of the week =0 -> First day of the week is Sunday
+- Extract week -> WEEK(registration_date) or EXTRACT(week from registration_date)
 
 ```sql
-
+SELECT week(registration_date) as 'Week of registration',
+       count(runner_id) as 'Number of runners'
+FROM pizza_runner.runners
+GROUP BY 1;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/164647808-eb3031b8-e120-4e8d-bc7f-64fa512d4aac.png)
 
 ***
 
