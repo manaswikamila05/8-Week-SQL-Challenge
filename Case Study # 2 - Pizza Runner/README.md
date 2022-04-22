@@ -4,6 +4,13 @@
 
 View the case study [here](https://8weeksqlchallenge.com/case-study-2/)
 
+## Table Of Contents
+  - [Introduction](#introduction)
+  - [Dataset](#dataset)
+  - [Entity Relationship Diagram](#entity-relationship-diagram)
+  - [Data Clean](#data-clean)
+  - [Case Study Solutions](#case-study-solutions)
+  
 ## Introduction
 Danny was scrolling through his Instagram feed when something really caught his eye - “80s Retro Styling and Pizza Is The Future!”
 
@@ -11,7 +18,7 @@ Danny was sold on the idea, but he knew that pizza alone was not going to help h
 
 Danny started by recruiting “runners” to deliver fresh pizza from Pizza Runner Headquarters (otherwise known as Danny’s house) and also maxed out his credit card to pay freelance developers to build a mobile app to accept orders from customers.
 
-## Datasets used
+## Dataset
 Key datasets for this case study
 - **runners** : The table shows the registration_date for each new runner
 - **customer_orders** : Customer pizza orders are captured in the customer_orders table with 1 row for each individual pizza that is part of the order. The pizza_id relates to the type of pizza which was ordered whilst the exclusions are the ingredient_id values which should be removed from the pizza and the extras are the ingredient_id values which need to be added to the pizza.
