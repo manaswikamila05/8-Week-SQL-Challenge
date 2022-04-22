@@ -38,7 +38,7 @@ When customers churn - they will keep their access until the end of their curren
 ![alt text]()
 
 ## Case Study Solutions
-- [A. Customer Journey](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/A.%20Pizza%20metrics.md)
-- [B. Data Analysis Questions](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/B.%20Runner%20and%20Customer%20Experience.md)
-- [C. Challenge Payment Question]
-- [D. Outside The Box Questions]
+- [A. Customer Journey]()
+- [B. Data Analysis Questions]()
+- [C. Challenge Payment Question]()
+- [D. Outside The Box Questions]()
