@@ -112,62 +112,103 @@ ORDER BY customer_id;
 
 ***
 
-###  
+###  6. What was the maximum number of pizzas delivered in a single order?
 
 ```sql
-
+SELECT customer_id,
+       order_id,
+       count(order_id) AS pizza_count
+FROM customer_orders_temp
+GROUP BY order_id
+ORDER BY pizza_count DESC
+LIMIT 1;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/164608353-a577858f-1d1c-46ed-b1f2-05644b756604.png)
 
 ***
 
-###  
+###  7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
+- at least 1 change -> either exclusion or extras 
+- no changes -> exclusion and extras are NULL
 
 ```sql
-
+SELECT customer_id,
+       SUM(CASE
+               WHEN (exclusions IS NOT NULL
+                     OR extras IS NOT NULL) THEN 1
+               ELSE 0
+           END) AS change_in_pizza,
+       SUM(CASE
+               WHEN (exclusions IS NULL
+                     AND extras IS NULL) THEN 1
+               ELSE 0
+           END) AS no_change_in_pizza
+FROM customer_orders_temp
+INNER JOIN runner_orders_temp USING (order_id)
+WHERE cancellation IS NULL
+GROUP BY customer_id
+ORDER BY customer_id;
 ``` 
-	
+
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/164609444-9b7453ed-2477-4ce0-b7f7-39768a0ce808.png)
 
 ***
 
-###  
+###  8. How many pizzas were delivered that had both exclusions and extras?
 
 ```sql
 
+SELECT customer_id,
+       SUM(CASE
+               WHEN (exclusions IS NOT NULL
+                     AND extras IS NOT NULL) THEN 1
+               ELSE 0
+           END) AS both_change_in_pizza
+FROM customer_orders_temp
+INNER JOIN runner_orders_temp USING (order_id)
+WHERE cancellation IS NULL
+GROUP BY customer_id
+ORDER BY customer_id;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/164609941-c2a6f1f8-38c2-4e1c-ab64-a9dd557077e5.png)
 
 ***
 
-###  
+###  9. What was the total volume of pizzas ordered for each hour of the day?
 
 ```sql
-
+SELECT hour(order_time) AS 'Hour',
+       count(order_id) AS 'Number of pizzas ordered',
+       round(100*count(order_id) /sum(count(order_id)) over(), 2) AS 'Volume of pizzas ordered'
+FROM pizza_runner.customer_orders_temp
+GROUP BY 1
+ORDER BY 1;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/164611355-1e9338d0-0523-42f6-8648-079a394387ff.png)
 
 ***
 
-###  
+###  10. What was the volume of orders for each day of the week?
+- The DAYOFWEEK() function returns the weekday index for a given date ( 1=Sunday, 2=Monday, 3=Tuesday, 4=Wednesday, 5=Thursday, 6=Friday, 7=Saturday )
+- DAYNAME() returns the name of the week day 
 
 ```sql
-
+SELECT dayname(order_time) AS 'Day Of Week',
+       count(order_id) AS 'Number of pizzas ordered',
+       round(100*count(order_id) /sum(count(order_id)) over(), 2) AS 'Volume of pizzas ordered'
+FROM pizza_runner.customer_orders_temp
+GROUP BY 1
+ORDER BY 2 DESC;
 ``` 
 	
 #### Result set:
-
-***
-
-###  
-
-```sql
-
-``` 
-	
-#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/164612599-c3903593-98e1-4fec-8076-9aa14d9601f9.png)
 
 ***
