@@ -23,7 +23,20 @@ Key datasets for this case study
 ![alt text](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/ERD.jpg)
 
 ## Data Clean
-There are some known data issues with few tables. Data cleaning was performed before attempting the case study - [Data Clean](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Data%20Clean.md)
+There are some known data issues with few tables. Data cleaning was performed and saved in temporary tables before attempting the case study.
+
+**customer_orders table**
+- The exclusions and extras columns in customer_orders table will need to be cleaned up before using them in the queries
+- In the exclusions and extras columns, there are blank spaces and null values.
+
+**runner_orders table**
+- The pickup_time, distance, duration and cancellation columns in runner_orders table will need to be cleaned up before using them in the queries
+- In the pickup_time column, there are null values.
+- In the distance column, there are null values. It contains unit - km. The 'km' must also be stripped
+- In the duration column, there are null values. The 'minutes', 'mins' 'minute' must be stripped
+- In the cancellation column, there are blank spaces and null values.
+
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Data%20Clean.md) to view the data cleaning peformed.
 
 ## Case Study Solutions
 - [A. Pizza Metrics](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Pizza%20metrics.md)
