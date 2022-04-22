@@ -33,7 +33,7 @@ SELECT * FROM customer_orders_temp;
 
 ***
 
-## customer_orders table
+## runner_orders table
 - The pickup_time, distance, duration and cancellation columns in runner_orders table will need to be cleaned up before using them in the queries  
 - In the pickup_time column, there are null values.
 - In the distance column, there are null values. It contains unit - km. The 'km' must also be stripped 
