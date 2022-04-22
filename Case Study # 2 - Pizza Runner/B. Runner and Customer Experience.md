@@ -132,4 +132,3 @@ ORDER BY runner_id;
 
 ***
 
-Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Ingredient%20Optimisation.md) for solution for C. Ingredient Optimisation!
