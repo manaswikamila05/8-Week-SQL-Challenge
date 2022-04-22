@@ -25,7 +25,7 @@ Key datasets for this case study
 ## Data Clean
 There are some known data issues with few tables. Data cleaning was performed before attempting the case study - [Data Clean](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Data%20Clean.md)
 
-## Case Study Questions
+## Case Study Solutions
 - [A. Pizza Metrics](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Pizza%20metrics.md)
 - [B. Runner and Customer Experience](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/Runner%20and%20Customer%20Experience.md)
 - C. Ingredient Optimisation
