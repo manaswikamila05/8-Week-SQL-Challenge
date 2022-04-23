@@ -55,7 +55,7 @@
 
 ***
 
-###  
+###  5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
 
 ```sql
 
@@ -65,3 +65,62 @@
 
 ***
 
+###  6. What is the number and percentage of customer plans after their initial free trial?
+
+```sql
+
+``` 
+	
+#### Result set:
+
+***
+
+###  7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?
+
+```sql
+
+``` 
+	
+#### Result set:
+
+***
+
+###  8. How many customers have upgraded to an annual plan in 2020?
+
+```sql
+
+``` 
+	
+#### Result set:
+
+***
+
+###  9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
+
+```sql
+
+``` 
+	
+#### Result set:
+
+***
+
+###  10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)
+
+```sql
+
+``` 
+	
+#### Result set:
+
+***
+
+###  11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
+
+```sql
+
+``` 
+	
+#### Result set:
+
+***
