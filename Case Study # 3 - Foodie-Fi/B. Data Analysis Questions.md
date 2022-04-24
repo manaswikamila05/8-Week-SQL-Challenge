@@ -154,10 +154,15 @@ ORDER BY plan_id;
 ###  8. How many customers have upgraded to an annual plan in 2020?
 
 ```sql
-
+SELECT plan_id,
+       COUNT(DISTINCT customer_id) AS annual_plan_customer_count
+FROM foodie_fi.subscriptions
+WHERE plan_id = 3
+  AND year(start_date) = 2020;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/164986297-31c4e3f7-3d85-47da-8dc3-92c8182fce26.png)
 
 ***
 
