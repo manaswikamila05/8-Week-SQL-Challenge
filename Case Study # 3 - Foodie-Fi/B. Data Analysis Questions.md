@@ -144,10 +144,27 @@ ORDER BY plan_id;
 ###  7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?
 
 ```sql
-
+WITH latest_plan_cte AS
+  (SELECT *,
+          row_number() over(PARTITION BY customer_id
+                            ORDER BY start_date DESC) AS latest_plan
+   FROM subscriptions
+   JOIN plans USING (plan_id)
+   WHERE start_date <='2020-12-31' )
+SELECT plan_id,
+       plan_name,
+       count(customer_id) AS customer_count,
+       round(100*count(customer_id) /
+               (SELECT COUNT(DISTINCT customer_id)
+                FROM subscriptions), 2) AS percentage_breakdown
+FROM latest_plan_cte
+WHERE latest_plan = 1
+GROUP BY plan_id
+ORDER BY plan_id;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/165534110-8fb9465a-0910-47c0-9264-0a056ff93bac.png)
 
 ***
 
@@ -169,10 +186,23 @@ WHERE plan_id = 3
 ###  9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
 
 ```sql
-
+WITH trial_plan_customer_cte AS
+  (SELECT *
+   FROM subscriptions
+   JOIN plans USING (plan_id)
+   WHERE plan_id=0),
+     annual_plan_customer_cte AS
+  (SELECT *
+   FROM subscriptions
+   JOIN plans USING (plan_id)
+   WHERE plan_id=3)
+SELECT round(avg(datediff(annual_plan_customer_cte.start_date, trial_plan_customer_cte.start_date)), 2)AS avg_conversion_days
+FROM trial_plan_customer_cte
+INNER JOIN annual_plan_customer_cte USING (customer_id);
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/165539042-2c2f5930-1fca-4e42-95e5-b5b1add1eb0d.png)
 
 ***
 
