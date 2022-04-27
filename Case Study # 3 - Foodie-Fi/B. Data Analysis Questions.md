@@ -217,12 +217,32 @@ WHERE plan_id =3;
 ***
 
 ###  10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)
+- The days between trial start date and the annual plan start date is computed.
+- The days are bucketed in 30 day period by dividing the number of days obtained by 30.
 
 ```sql
-
+WITH next_plan_cte AS
+  (SELECT *,
+          lead(start_date, 1) over(PARTITION BY customer_id
+                                   ORDER BY start_date) AS next_plan_start_date,
+          lead(plan_id, 1) over(PARTITION BY customer_id
+                                ORDER BY start_date) AS next_plan
+   FROM subscriptions),
+     window_details_cte AS
+  (SELECT *,
+          datediff(next_plan_start_date, start_date) AS days,
+          round(datediff(next_plan_start_date, start_date)/30) AS window_30_days
+   FROM next_plan_cte
+   WHERE next_plan=3)
+SELECT window_30_days,
+       count(*) AS customer_count
+FROM window_details_cte
+GROUP BY window_30_days
+ORDER BY window_30_days;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/165565951-25bd5beb-cfab-4a79-9813-2e5d45cd4d04.png)
 
 ***
 
