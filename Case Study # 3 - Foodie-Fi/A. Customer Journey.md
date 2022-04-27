@@ -138,6 +138,6 @@ WHERE customer_id =290;
 - They subscribed to the basic monthly plan during the seven day the trial period to continue the subscription
 ***
 
-
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%203%20-%20Foodie-Fi/B.%20Data%20Analysis%20Questions.md) to view the solution solution of B. Data Analysis Questions!
 
 
