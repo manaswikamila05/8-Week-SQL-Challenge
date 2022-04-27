@@ -200,10 +200,20 @@ SELECT round(avg(datediff(annual_plan_customer_cte.start_date, trial_plan_custom
 FROM trial_plan_customer_cte
 INNER JOIN annual_plan_customer_cte USING (customer_id);
 ``` 
-	
+
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/165539042-2c2f5930-1fca-4e42-95e5-b5b1add1eb0d.png)
 
+```sql
+WITH trial_plan_cte AS
+  (SELECT *,
+          first_value(start_date) over(PARTITION BY customer_id
+                                       ORDER BY start_date) AS trial_plan_start_date
+   FROM subscriptions)
+SELECT round(avg(datediff(start_date, trial_plan_start_date)), 2)AS avg_conversion_days
+FROM trial_plan_cte
+WHERE plan_id =3;
+``` 
 ***
 
 ###  10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)
@@ -219,9 +229,19 @@ INNER JOIN annual_plan_customer_cte USING (customer_id);
 ###  11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
 
 ```sql
-
+WITH next_plan_cte AS
+  (SELECT *,
+          lead(plan_id, 1) over(PARTITION BY customer_id
+                                ORDER BY start_date) AS next_plan
+   FROM subscriptions)
+SELECT count(*) AS downgrade_count
+FROM next_plan_cte
+WHERE plan_id=2
+  AND next_plan=1
+  AND year(start_date);
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/165546400-04f13c2c-2ac2-4042-a4db-249af8316538.png)
 
 ***
