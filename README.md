@@ -1,7 +1,9 @@
-# 8-Week-SQL-Challenge
+# :takeout_box::plate_with_cutlery::moneybag: 8-Week-SQL-Challenge
 
 This repository contains the solution for the case studies in **[#8WeekSQLChallenge](https://8weeksqlchallenge.com)**.
 The 8 Week SQL Challenge is started by Danny Ma through Data With Danny virtual data apprenticeship program, which consists of 8 different SQL challenges.
+
+**Note**: Only data analysis questions are answered in each case study.
 
 ## Case Study #1: Danny's Diner
 <p align="center">
