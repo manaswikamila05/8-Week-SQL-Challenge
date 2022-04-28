@@ -40,5 +40,4 @@ There are 5 customer plans.
 ## Case Study Solutions
 - [A. Customer Journey](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%203%20-%20Foodie-Fi/A.%20Customer%20Journey.md)
 - [B. Data Analysis Questions](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%203%20-%20Foodie-Fi/B.%20Data%20Analysis%20Questions.md)
-- [C. Challenge Payment Question](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%203%20-%20Foodie-Fi/C.%20Challenge%20Payment%20Question.md)
-- [D. Outside The Box Questions]()
+
