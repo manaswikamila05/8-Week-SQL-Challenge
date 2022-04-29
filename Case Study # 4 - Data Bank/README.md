@@ -1,4 +1,4 @@
-# :coin: :moneybag: :cloud: :chart: Case Study #4: Data Bank 
+# :technologist: :moneybag: :cloud: :chart: Case Study #4: Data Bank 
 <p align="center">
 <img src="https://8weeksqlchallenge.com/images/case-study-designs/4.png" alt="Image" width="450" height="450">
 
