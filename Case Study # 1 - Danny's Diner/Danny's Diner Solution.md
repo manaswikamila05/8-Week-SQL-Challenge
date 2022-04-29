@@ -80,6 +80,32 @@ GROUP BY customer_id,
 | B           | curry        |
 | C           | ramen        |
 
+```sql
+WITH order_info_cte AS
+  (SELECT customer_id,
+          order_date,
+          product_name,
+          DENSE_RANK() OVER(PARTITION BY s.customer_id
+                            ORDER BY s.order_date) AS rank_num
+   FROM dannys_diner.sales AS s
+   JOIN dannys_diner.menu AS m ON s.product_id = m.product_id),
+     first_item AS
+  (SELECT customer_id,
+          product_name
+   FROM order_info_cte
+   WHERE rank_num = 1
+   GROUP BY customer_id,
+            product_name)
+SELECT customer_id,
+       GROUP_CONCAT(DISTINCT product_name
+                    ORDER BY product_name) AS product_name
+FROM first_item
+GROUP BY customer_id;
+``` 
+	
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/165887304-a1e2e494-a611-43b0-af50-3674d2133f09.png)
+
 ***
 
 ###  4. What is the most purchased item on the menu and how many times was it purchased by all customers?
@@ -98,6 +124,21 @@ LIMIT 1;
 | most_purchased_item | order_count |
 | ------------------- | ----------- |
 | ramen               | 8           |
+
+```sql
+SELECT most_purchased_item,
+       max(order_count) AS order_count
+FROM
+  (SELECT product_name AS most_purchased_item,
+          count(sales.product_id) AS order_count
+   FROM dannys_diner.menu
+   INNER JOIN dannys_diner.sales ON menu.product_id = sales.product_id
+   GROUP BY product_name
+   ORDER BY order_count DESC) max_purchased_item;
+``` 
+	
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/165887623-4abffa33-c5d1-4e20-b8a8-8cd0d8c16e7a.png)
 
 ***
 
@@ -129,6 +170,29 @@ WHERE rank_num =1;
 | B           | curry        | 2           |
 | B           | sushi        | 2           |
 | C           | ramen        | 3           |
+
+```sql
+WITH order_info AS
+  (SELECT product_name,
+          customer_id,
+          count(product_name) AS order_count,
+          rank() over(PARTITION BY customer_id
+                      ORDER BY count(product_name) DESC) AS rank_num
+   FROM dannys_diner.menu
+   INNER JOIN dannys_diner.sales ON menu.product_id = sales.product_id
+   GROUP BY customer_id,
+            product_name)
+SELECT customer_id,
+       GROUP_CONCAT(DISTINCT product_name
+                    ORDER BY product_name) AS product_name,
+       order_count
+FROM order_info
+WHERE rank_num =1
+GROUP BY customer_id;
+``` 
+	
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/165887834-471f46c0-2520-4b83-88d9-d91310ceb87c.png)
 
 ***
 
