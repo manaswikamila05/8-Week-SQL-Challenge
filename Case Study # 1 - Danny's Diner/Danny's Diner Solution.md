@@ -61,13 +61,13 @@ WITH order_info_cte AS
           order_date,
           product_name,
           DENSE_RANK() OVER(PARTITION BY s.customer_id
-                            ORDER BY s.order_date) AS rank
+                            ORDER BY s.order_date) AS rank_num
    FROM dannys_diner.sales AS s
    JOIN dannys_diner.menu AS m ON s.product_id = m.product_id)
 SELECT customer_id,
        product_name
 FROM order_info_cte
-WHERE rank = 1
+WHERE rank_num = 1
 GROUP BY customer_id,
          product_name;
 ``` 
