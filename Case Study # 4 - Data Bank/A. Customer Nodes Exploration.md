@@ -70,7 +70,21 @@ WHERE end_date!='9999-12-31';
 ###  5. What is the median, 80th and 95th percentile for this same reallocation days metric for each region?
 
 ```sql
-
+WITH reallocation_days_cte AS
+  (SELECT *,
+          (datediff(end_date, start_date)) AS reallocation_days
+   FROM customer_nodes
+   WHERE end_date!='9999-12-31'),
+     percentile_cte AS
+  (SELECT *,
+          percent_rank() over(PARTITION BY region_id
+                              ORDER BY reallocation_days)*100 AS p
+   FROM reallocation_days_table)
+SELECT region_id,
+       avg(reallocation_days) AS avg_reallocation_days
+FROM percentile_cte
+WHERE p<=95
+GROUP BY region_id;
 ``` 
 	
 #### Result set:
