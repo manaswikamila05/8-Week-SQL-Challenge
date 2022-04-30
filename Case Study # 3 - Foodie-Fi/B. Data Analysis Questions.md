@@ -265,3 +265,5 @@ WHERE plan_id=2
 ![image](https://user-images.githubusercontent.com/77529445/165546400-04f13c2c-2ac2-4042-a4db-249af8316538.png)
 
 ***
+
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge) to move back to the 8-Week-SQL-Challenge repository!
