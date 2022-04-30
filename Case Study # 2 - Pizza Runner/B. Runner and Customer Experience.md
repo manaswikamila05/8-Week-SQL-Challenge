@@ -132,3 +132,4 @@ ORDER BY runner_id;
 
 ***
 
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge) to move back to the 8-Week-SQL-Challenge repository!
