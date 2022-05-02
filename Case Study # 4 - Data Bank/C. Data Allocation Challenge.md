@@ -71,7 +71,36 @@ FROM month_end_balance_cte;
 ``` 
 - minimum, average and maximum values of the running balance for each customer
 ```sql
-
+WITH transaction_amt_cte AS
+  (SELECT *,
+          month(txn_date) AS txn_month,
+          SUM(CASE
+                  WHEN txn_type="deposit" THEN txn_amount
+                  ELSE -txn_amount
+              END) AS net_transaction_amt
+   FROM customer_transactions
+   GROUP BY customer_id,
+            txn_date
+   ORDER BY customer_id,
+            txn_date),
+     running_customer_balance_cte AS
+  (SELECT customer_id,
+          txn_date,
+          txn_month,
+          txn_type,
+          txn_amount,
+          sum(net_transaction_amt) over(PARTITION BY customer_id
+                                        ORDER BY txn_month ROWS BETWEEN UNBOUNDED preceding AND CURRENT ROW) AS running_customer_balance
+   FROM transaction_amt_cte
+   GROUP BY customer_id,
+            txn_month)
+SELECT customer_id,
+       min(running_customer_balance),
+       max(running_customer_balance),
+       round(avg(running_customer_balance), 2) AS 'avg(running_customer_balance)'
+FROM running_customer_balance_cte
+GROUP BY customer_id
+ORDER BY customer_id ;
 ``` 
 
 
@@ -126,49 +155,8 @@ ORDER BY txn_month
 
 **Observed**: Data required per month is negative. This is caused due to negative account balance maintained by customers at the end of the month.
 
-**Assumption**: Some customers do not maintain a positive account balance at the end of the month. The data allocation for such customers is considered to be 0. There is no mention of penalizing customers for maintaining a negative balance at the end of each month in the case study, I'm assuming that no data is allocated when the 
-amount of money at the end of the previous month is negative
-
-```sql
-WITH transaction_amt_cte AS
-  (SELECT *,
-          month(txn_date) AS txn_month,
-          SUM(CASE
-                  WHEN txn_type="deposit" THEN txn_amount
-                  ELSE -txn_amount
-              END) AS net_transaction_amt
-   FROM customer_transactions
-   GROUP BY customer_id,
-            txn_date
-   ORDER BY customer_id,
-            txn_date),
-     running_customer_balance_cte AS
-  (SELECT customer_id,
-          txn_date,
-          txn_month,
-          txn_type,
-          txn_amount,
-          sum(net_transaction_amt) over(PARTITION BY customer_id
-                                        ORDER BY txn_month ROWS BETWEEN UNBOUNDED preceding AND CURRENT ROW) AS running_customer_balance
-   FROM transaction_amt_cte),
-     month_end_balance_cte AS
-  (SELECT *,
-          last_value(running_customer_balance) over(PARTITION BY customer_id, txn_month
-                                                    ORDER BY txn_month) AS month_end_balance
-   FROM running_customer_balance_cte),
-     customer_month_end_balance_cte AS
-  (SELECT customer_id,
-          txn_month,
-          month_end_balance
-   FROM month_end_balance_cte
-   GROUP BY customer_id,
-            txn_month)
-SELECT txn_month,
-       sum(IF(month_end_balance > 0, month_end_balance, 0))AS data_required_per_month
-FROM customer_month_end_balance_cte
-GROUP BY txn_month
-ORDER BY txn_month;
-``` 
+**Assumption**: Some customers do not maintain a positive account balance at the end of the month. I'm assuming that no data is allocated when the 
+amount of money at the end of the previous month is negative. we can use **SUM(IF(month_end_balance > 0, month_end_balance, 0))** in the select clause to compute the total data requirement per month.
 
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/166266334-1a6ea8e8-7495-4832-90b0-3801017ab991.png)
