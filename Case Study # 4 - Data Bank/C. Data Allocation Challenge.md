@@ -167,10 +167,46 @@ amount of money at the end of the previous month is negative. we can use **SUM(I
 How much data would have been required on a monthly basis?
 
 ```sql
-
+WITH transaction_amt_cte AS
+  (SELECT *,
+          month(txn_date) AS txn_month,
+          SUM(CASE
+                  WHEN txn_type="deposit" THEN txn_amount
+                  ELSE -txn_amount
+              END) AS net_transaction_amt
+   FROM customer_transactions
+   GROUP BY customer_id,
+            txn_date
+   ORDER BY customer_id,
+            txn_date),
+     running_customer_balance_cte AS
+  (SELECT customer_id,
+          txn_date,
+          txn_month,
+          txn_type,
+          txn_amount,
+          sum(net_transaction_amt) over(PARTITION BY customer_id
+                                        ORDER BY txn_month ROWS BETWEEN UNBOUNDED preceding AND CURRENT ROW) AS running_customer_balance
+   FROM transaction_amt_cte
+   GROUP BY customer_id,
+            txn_month),
+     avg_running_customer_balance AS
+  (SELECT customer_id,
+          txn_month,
+          avg(running_customer_balance) over(PARTITION BY customer_id) AS 'avg_running_customer_balance'
+   FROM running_customer_balance_cte
+   GROUP BY customer_id,
+            txn_month
+   ORDER BY customer_id)
+SELECT txn_month,
+       round(sum(avg_running_customer_balance)) AS data_required_per_month
+FROM avg_running_customer_balance
+GROUP BY txn_month;
 ``` 
 
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/166285983-4bd22c19-f272-4338-a845-56ef1137b81a.png)
+
 
 
 ###  **Option 3**: Data is updated real-time
