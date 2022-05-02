@@ -70,9 +70,10 @@ WHERE end_date!='9999-12-31';
 ###  5. What is the median, 80th and 95th percentile for this same reallocation days metric for each region?
 - reallocation days metric: days taken to reallocate to a different node
 - Percentile found by partitioning the dataset by regions and arranging it in ascending order of reallocation_days
-- 95th percentile - > 95% of the values are less than or equal to the current value.
-- Found the average of the reallocation_days per region
+- 95th percentile -> 95% of the values are less than or equal to the current value.
 
+
+**95th percentile**
 ```sql
 with reallocation_days_cte as(
 select *, (datediff(end_date,start_date)) as reallocation_days
@@ -84,13 +85,13 @@ select *,
 percent_rank() over(partition by region_id  order by reallocation_days )*100 as p
 from reallocation_days_table
 )
-select region_id, avg(reallocation_days) AS avg_reallocation_days
+select region_id, reallocation_days
 from percentile_cte
-where p<=95
+where p between 95.0 and 95.99
 group by region_id;
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/77529445/166218471-b11da121-e671-4086-ab9e-3c04570ba987.png)
+![image](https://user-images.githubusercontent.com/77529445/166219080-acfa853a-111a-4fde-bcd7-dfb1d35f685e.png)
 
 ***
