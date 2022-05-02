@@ -45,10 +45,49 @@ SELECT *,
 FROM running_customer_balance_cte;
 ``` 
 
-## **Option 1**: data is allocated based off the amount of money at the end of the previous month
+###  **Option 1**: Data is allocated based off the amount of money at the end of the previous month
+How much data would have been required on a monthly basis?
 
-Assumption: Some customers do not maintain a positive account balance at the end of the month. The data allocation for such customers is considered to be 0 since there is no mention of penalizing customers for maintaining a negative balance at the end of each month
+```sql
+WITH transaction_amt_cte AS
+  (SELECT *,
+          month(txn_date) AS txn_month,
+          SUM(CASE
+                  WHEN txn_type="deposit" THEN txn_amount
+                  ELSE -txn_amount
+              END) AS net_transaction_amt
+   FROM customer_transactions
+   GROUP BY customer_id,
+            txn_date
+   ORDER BY customer_id,
+            txn_date),
+     running_customer_balance_cte AS
+  (SELECT customer_id,
+          txn_date,
+          txn_month,
+          txn_type,
+          txn_amount,
+          sum(net_transaction_amt) over(PARTITION BY customer_id
+                                        ORDER BY txn_month ROWS BETWEEN UNBOUNDED preceding AND CURRENT ROW) AS running_customer_balance
+   FROM transaction_amt_cte),
+     month_end_balance_cte AS
+  (SELECT *,
+          last_value(running_customer_balance) over(PARTITION BY customer_id, txn_month
+                                                    ORDER BY txn_month) AS month_end_balance
+   FROM running_customer_balance_cte)
+SELECT txn_month,
+       month_end_balance AS data_required_per_month
+FROM month_end_balance_cte
+GROUP BY txn_month
+ORDER BY txn_month;
+``` 
 
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/166234744-92d9d2b2-2500-4809-aa1b-73676a7aac20.png)
+
+
+Assumption: Some customers do not maintain a positive account balance at the end of the month. The data allocation for such customers is considered to be 0. There is no mention of penalizing customers for maintaining a negative balance at the end of each month in the case study, I'm assuming that no data is allocated when the 
+amount of money at the end of the previous month is negative
 
 ```sql
 WITH transaction_amt_cte AS
@@ -80,5 +119,10 @@ WITH transaction_amt_cte AS
 SELECT txn_month,
        sum(IF(month_end_balance > 0, month_end_balance, 0)) AS data_required_per_month
 FROM month_end_balance_cte
-GROUP BY txn_month;
+GROUP BY txn_month
+ORDER BY txn_month;
 ``` 
+
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/166234148-2842ac23-565c-4087-af2a-0d72adbf5a61.png)
+
