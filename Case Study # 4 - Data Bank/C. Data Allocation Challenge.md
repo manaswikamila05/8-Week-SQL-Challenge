@@ -9,8 +9,71 @@ To test out a few different hypotheses - the Data Bank team wants to run an expe
 
 For this multi-part challenge question - you have been requested to generate the following data elements to help the Data Bank team estimate how much data will need to be provisioned for each option:
 - running customer balance column that includes the impact each transaction
+```sql
+ WITH transaction_amt_cte AS
+  (SELECT *,
+          month(txn_date) AS txn_month,
+          SUM(CASE
+                  WHEN txn_type="deposit" THEN txn_amount
+                  ELSE -txn_amount
+              END) AS net_transaction_amt
+   FROM customer_transactions
+   GROUP BY customer_id,
+            txn_date
+   ORDER BY customer_id,
+            txn_date),
+      running_customer_balance_cte AS
+  (SELECT customer_id,
+          txn_date,
+          txn_month,
+          txn_type,
+          txn_amount,
+          sum(net_transaction_amt) over(PARTITION BY customer_id
+                                        ORDER BY txn_month ROWS BETWEEN UNBOUNDED preceding AND CURRENT ROW) AS running_customer_balance
+   FROM transaction_amt_cte)
+SELECT *
+FROM running_customer_balance_cte;
+``` 
 - customer balance at the end of each month
+```sql
+ WITH transaction_amt_cte AS
+  (SELECT *,
+          month(txn_date) AS txn_month,
+          SUM(CASE
+                  WHEN txn_type="deposit" THEN txn_amount
+                  ELSE -txn_amount
+              END) AS net_transaction_amt
+   FROM customer_transactions
+   GROUP BY customer_id,
+            txn_date
+   ORDER BY customer_id,
+            txn_date),
+      running_customer_balance_cte AS
+  (SELECT customer_id,
+          txn_date,
+          txn_month,
+          txn_type,
+          txn_amount,
+          sum(net_transaction_amt) over(PARTITION BY customer_id
+                                        ORDER BY txn_month ROWS BETWEEN UNBOUNDED preceding AND CURRENT ROW) AS running_customer_balance
+   FROM transaction_amt_cte),
+      month_end_balance_cte AS
+  (SELECT *,
+          last_value(running_customer_balance) over(PARTITION BY customer_id, txn_month
+                                                    ORDER BY txn_month) AS month_end_balance
+   FROM running_customer_balance_cte
+   GROUP BY customer_id,
+            txn_month)
+SELECT customer_id,
+       txn_month,
+       month_end_balance
+FROM month_end_balance_cte;
+``` 
 - minimum, average and maximum values of the running balance for each customer
+```sql
+
+``` 
+
 
 Using all of the data available - how much data would have been required for each option on a monthly basis?
 
