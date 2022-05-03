@@ -340,7 +340,7 @@ ORDER BY s.customer_id;
 ```sql
 WITH program_last_day_cte AS
   (SELECT join_date,
-          DATE_ADD(join_date, INTERVAL 7 DAY) AS program_last_date,
+          DATE_ADD(join_date, INTERVAL 6 DAY) AS program_last_date,
           customer_id
    FROM dannys_diner.members)
 SELECT s.customer_id,
@@ -364,7 +364,7 @@ ORDER BY s.customer_id;
 | customer_id | customer_points |
 | ----------- | --------------- |
 | A           | 1020            |
-| B           | 440             |
+| B           | 320             |
 
 ***
 
