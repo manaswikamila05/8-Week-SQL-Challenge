@@ -242,18 +242,19 @@ WITH diner_info AS
    INNER JOIN dannys_diner.members AS mem ON mem.customer_id = s.customer_id
    WHERE order_date < join_date )
 SELECT customer_id,
-       product_name,
+       GROUP_CONCAT(DISTINCT product_name
+                    ORDER BY product_name) AS product_name,
        order_date,
        join_date
 FROM diner_info
-WHERE item_rank=1;
+WHERE item_rank=1
+GROUP BY customer_id;
 ``` 
 	
 #### Result set:
 | customer_id | product_name | order_date               | join_date                |
 | ----------- | ------------ | ------------------------ | ------------------------ |
-| A           | sushi        | 2021-01-01T00:00:00.000Z | 2021-01-07T00:00:00.000Z |
-| A           | curry        | 2021-01-01T00:00:00.000Z | 2021-01-07T00:00:00.000Z |
+| A           | curry,sushi  | 2021-01-01T00:00:00.000Z | 2021-01-07T00:00:00.000Z |
 | B           | sushi        | 2021-01-04T00:00:00.000Z | 2021-01-09T00:00:00.000Z |
 
 ***
