@@ -74,6 +74,7 @@ WHERE end_date!='9999-12-31';
 
 
 **95th percentile**
+```sql
 WITH reallocation_days_cte AS
   (SELECT *,
           (datediff(end_date, start_date)) AS reallocation_days
@@ -98,6 +99,7 @@ GROUP BY region_id;
 
 
 **80th percentile**
+```sql
 WITH reallocation_days_cte AS
   (SELECT *,
           (datediff(end_date, start_date)) AS reallocation_days
@@ -122,6 +124,7 @@ GROUP BY region_id;
 
 
 **50th percentile**
+```sql
 WITH reallocation_days_cte AS
   (SELECT *,
           (datediff(end_date, start_date)) AS reallocation_days
