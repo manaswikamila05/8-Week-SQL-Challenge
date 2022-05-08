@@ -213,9 +213,35 @@ GROUP BY txn_month;
 How much data would have been required on a monthly basis?
 
 ```sql
-
+WITH transaction_amt_cte AS
+  (SELECT *,
+          month(txn_date) AS txn_month,
+          SUM(CASE
+                  WHEN txn_type="deposit" THEN txn_amount
+                  ELSE -txn_amount
+              END) AS net_transaction_amt
+   FROM customer_transactions
+   GROUP BY customer_id,
+            txn_date
+   ORDER BY customer_id,
+            txn_date),
+     running_customer_balance_cte AS
+  (SELECT customer_id,
+          txn_date,
+          txn_month,
+          txn_type,
+          txn_amount,
+          net_transaction_amt,
+          sum(net_transaction_amt) over(PARTITION BY customer_id
+                                        ORDER BY txn_month ROWS BETWEEN UNBOUNDED preceding AND CURRENT ROW) AS running_customer_balance
+   FROM transaction_amt_cte)
+SELECT txn_month,
+       SUM(running_customer_balance) AS data_required_per_month
+FROM running_customer_balance_cte
+GROUP BY txn_month;
 ``` 
 
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/167304936-5586815b-fd25-4245-8658-c5ab8b3c54f2.png)
 
 ***
