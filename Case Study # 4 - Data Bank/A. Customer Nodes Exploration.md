@@ -74,24 +74,75 @@ WHERE end_date!='9999-12-31';
 
 
 **95th percentile**
-```sql
-with reallocation_days_cte as(
-select *, (datediff(end_date,start_date)) as reallocation_days
-from customer_nodes
-where end_date!='9999-12-31'),
-percentile_cte as 
-(
-select *,  
-percent_rank() over(partition by region_id  order by reallocation_days )*100 as p
-from reallocation_days_table
-)
-select region_id, reallocation_days
-from percentile_cte
-where p between 95.0 and 95.99
-group by region_id;
+WITH reallocation_days_cte AS
+  (SELECT *,
+          (datediff(end_date, start_date)) AS reallocation_days
+   FROM customer_nodes
+   INNER JOIN regions USING (region_id)
+   WHERE end_date!='9999-12-31'),
+     percentile_cte AS
+  (SELECT *,
+          percent_rank() over(PARTITION BY region_id
+                              ORDER BY reallocation_days)*100 AS p
+   FROM reallocation_days_cte)
+SELECT region_id,
+       region_name,
+       reallocation_days
+FROM percentile_cte
+WHERE p >95
+GROUP BY region_id;
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/77529445/166219080-acfa853a-111a-4fde-bcd7-dfb1d35f685e.png)
+![image](https://user-images.githubusercontent.com/77529445/167305418-be293295-3379-4f88-ad26-4324832d04ff.png)
+
+
+**80th percentile**
+WITH reallocation_days_cte AS
+  (SELECT *,
+          (datediff(end_date, start_date)) AS reallocation_days
+   FROM customer_nodes
+   INNER JOIN regions USING (region_id)
+   WHERE end_date!='9999-12-31'),
+     percentile_cte AS
+  (SELECT *,
+          percent_rank() over(PARTITION BY region_id
+                              ORDER BY reallocation_days)*100 AS p
+   FROM reallocation_days_cte)
+SELECT region_id,
+       region_name,
+       reallocation_days
+FROM percentile_cte
+WHERE p >95
+GROUP BY region_id;
+``` 
+	
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/167305462-ed0ae44f-14a8-497a-8a77-275784464e6b.png)
+
+
+**50th percentile**
+WITH reallocation_days_cte AS
+  (SELECT *,
+          (datediff(end_date, start_date)) AS reallocation_days
+   FROM customer_nodes
+   INNER JOIN regions USING (region_id)
+   WHERE end_date!='9999-12-31'),
+     percentile_cte AS
+  (SELECT *,
+          percent_rank() over(PARTITION BY region_id
+                              ORDER BY reallocation_days)*100 AS p
+   FROM reallocation_days_cte)
+SELECT region_id,
+       region_name,
+       reallocation_days
+FROM percentile_cte
+WHERE p >50
+GROUP BY region_id;
+``` 
+	
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/167305484-9721af81-a887-4e64-9b1a-81e41862d323.png)
+
 
 ***
