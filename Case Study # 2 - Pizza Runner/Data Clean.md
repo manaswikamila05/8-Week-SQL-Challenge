@@ -75,5 +75,68 @@ SELECT * FROM runner_orders_temp;
 
 ***
 
+## pizza_recipes table
+- The toppings column in the pizza_recipes table is a comma separated string.
+- A temporary table is created which stores the pizza id and the topping in a separate row by splitting the comma separated string into multiple rows.
+
+#### pizza_recipes table
+![image](https://user-images.githubusercontent.com/77529445/167378441-104c0fea-c7ed-4968-8a9a-e8aa0c8ae3f3.png)
+
+
+```sql
+DROP TABLE IF EXISTS pizza_topping_temp;
+
+
+CREATE
+TEMPORARY TABLE pizza_topping_temp(pizza_id int, topping int);
+
+
+DROP PROCEDURE IF EXISTS GetToppings;
+
+
+DELIMITER $$
+CREATE PROCEDURE GetToppings()
+BEGIN
+	DECLARE i INT DEFAULT 0;
+    DECLARE j INT DEFAULT 0;
+	DECLARE n INT DEFAULT 0;
+    DECLARE x INT DEFAULT 0;
+    DECLARE id  INT;
+	DECLARE topping_in TEXT;
+    DECLARE topping_out TEXT;
+
+ 	SET i = 0;
+    SELECT COUNT(*) FROM pizza_recipes INTO n;
+
+	WHILE i < n DO  -- Iterate per row
+		SELECT pizza_id, toppings INTO id, topping_in FROM pizza_recipes LIMIT i,1 ; -- Select each row and store values in id, topping_in variables
+		SET x = (CHAR_LENGTH(topping_in) - CHAR_LENGTH( REPLACE ( topping_in, ' ', '') ))+1; -- Find the number of toppings in the row
+
+        SET j = 1;
+		WHILE j <= x DO -- Iterate over each element in topping
+			SET topping_out = TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(topping_in, ',', j), ',', -1));
+            -- SUBSTRING_INDEX(topping_in, ',', j -> Returns a substring from a string before j occurences of comma
+            -- (SUBSTRING_INDEX(SUBSTRING_INDEX(topping_in, ',', j), ',', -1)) -> Returns the last topping from the substring found above, element at -1 index
+			INSERT INTO pizza_topping_temp VALUES(id, topping_out);  -- Insert pizza_id and the topping into table pizza_info
+			SET j = j + 1; -- Increment the counter to find the next pizza topping in the row
+        END WHILE;
+        SET i = i + 1;-- Increment the counter to fetch the next row
+	END WHILE;
+END$$
+DELIMITER ;
+
+CALL GetToppings();
+
+
+SELECT *
+FROM pizza_topping_temp;
+``` 
+	
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/167378920-e084b0e7-69d7-4202-9d7d-cd18b93f4400.png)
+
+***
+
 - [A. Pizza Metrics](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/A.%20Pizza%20metrics.md)
 - [B. Runner and Customer Experience](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/B.%20Runner%20and%20Customer%20Experience.md)
+- [C. Ingredient Optimisation](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/C.%20Ingredient%20Optimisation.md)
