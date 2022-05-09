@@ -369,6 +369,52 @@ ORDER BY s.customer_id;
 
 ***
 
+###  Bonus Questions
+
+#### Join All The Things
+Create basic data tables that Danny and his team can use to quickly derive insights without needing to join the underlying tables using SQL. Fill Member column as 'N' if the purchase was made before becoming a member and 'Y' if the after is amde after joining the membership.
+
+```sql
+SELECT customer_id,
+       order_date,
+       product_name,
+       price,
+       IF(order_date >= join_date, 'Y', 'N') AS member
+FROM members
+RIGHT JOIN sales USING (customer_id)
+INNER JOIN menu USING (product_id)
+ORDER BY customer_id,
+         order_date;
+``` 
+	
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/167406964-25276db9-fe1c-4608-8b77-b0970b156888.png)
+
+***
+
+#### Rank All The Things
+Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+
+```sql
+SELECT customer_id,
+       order_date,
+       product_name,
+       price,
+       IF(order_date >= join_date, 'Y', 'N') AS member
+FROM members
+RIGHT JOIN sales USING (customer_id)
+INNER JOIN menu USING (product_id)
+ORDER BY customer_id,
+         order_date;
+``` 
+	
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/167407504-41d02dd0-0bd1-4a3c-8f41-00ae07daefad.png)
+
+
+***
+
+
 Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge) to move back to the 8-Week-SQL-Challenge repository!
 
 
