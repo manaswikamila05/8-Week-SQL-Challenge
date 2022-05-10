@@ -136,7 +136,7 @@ FROM pizza_topping_temp;
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/167378920-e084b0e7-69d7-4202-9d7d-cd18b93f4400.png)
 
-### Method 2: Using [JSON functions](https://dev.mysql.com/doc/refman/8.0/en/json-table-functions.html)
+### Method 2: Using [JSON table functions](https://dev.mysql.com/doc/refman/8.0/en/json-table-functions.html)
 - JSON functions are used to split the comma separated string into multiple rows.
 - json_array() converts the string to a JSON array
 - We enclose array elements with double quotes, this is performed using the replace function and we trim the resultant array
@@ -169,6 +169,30 @@ JOIN json_table(trim(replace(json_array(t.toppings), ',', '","')), '$[*]' column
 
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/167557792-a3bf6995-7dca-46d6-96ee-5d514b9bcdaf.png)
+
+***
+## customer_orders_temp table
+
+#### customer_orders_temp table
+- The exclusions and extras columns in the pizza_recipes table are comma separated strings.
+
+![image](https://user-images.githubusercontent.com/77529445/167646135-16d78dfb-66aa-4947-bc46-b96885bbc689.png)
+
+```sql
+SELECT t.order_id,
+       t.customer_id,
+       t.pizza_id,
+       trim(j1.exclusions) AS exclusions,
+       trim(j2.extras) AS extras,
+       t.order_time
+FROM customer_orders_temp t
+INNER JOIN json_table(trim(replace(json_array(t.exclusions), ',', '","')), '$[*]' columns (exclusions varchar(50) PATH '$')) j1
+INNER JOIN json_table(trim(replace(json_array(t.extras), ',', '","')), '$[*]' columns (extras varchar(50) PATH '$')) j2 ;
+```
+
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/167646003-3dea1805-01b4-41a7-8570-2515ea229eed.png)
+
 
 ***
 
