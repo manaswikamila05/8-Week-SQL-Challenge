@@ -136,8 +136,30 @@ FROM pizza_topping_temp;
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/167378920-e084b0e7-69d7-4202-9d7d-cd18b93f4400.png)
 
-### Method 2: Using a JSON functions
+### Method 2: Using [JSON functions](https://dev.mysql.com/doc/refman/8.0/en/json-table-functions.html)
 - JSON functions are used to split the comma separated string into multiple rows.
+- json_array() converts the string to a JSON array
+- We enclose array elements with double quotes, this is performed using the replace function and we trim the resultant array
+
+```sql
+SELECT *,
+       json_array(toppings),
+       replace(json_array(toppings), ',', '","'),
+       trim(replace(json_array(toppings), ',', '","'))
+FROM pizza_runner.pizza_recipes;
+```
+![image](https://user-images.githubusercontent.com/77529445/167558519-c2a9f550-336d-440e-a4b1-26dff0d74084.png)
+
+- We convert the json data into a tabular data using json_table().
+-  **Syntax**: JSON_TABLE(expr, path COLUMNS (column_list) [AS] alias)
+-  It extracts data from a JSON document and returns it as a relational table having the specified columns
+-  Each match for the path preceding the COLUMNS keyword maps to an individual row in the result table.  
+
+```sql
+'$[*]' -- The expression "$[*]" matches each element of the array and maps it to an individual row in the result table.
+columns (topping varchar(50) PATH '$') -- Within a column definition, "$" passes the entire match to the column; 
+```
+
 
 ```sql
 SELECT t.pizza_id, (j.topping)
