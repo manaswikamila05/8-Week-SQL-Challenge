@@ -74,25 +74,26 @@ SELECT * FROM runner_orders_temp;
 
 
 ***
+# Expanding the comma seperated string into rows
 
 ## pizza_recipes table
-- The toppings column in the pizza_recipes table is a comma separated string.
-- A temporary table is created which stores the pizza id and the topping in a separate row by splitting the comma separated string into multiple rows.
 
 #### pizza_recipes table
+- The toppings column in the pizza_recipes table is a comma separated string.
+
 ![image](https://user-images.githubusercontent.com/77529445/167378441-104c0fea-c7ed-4968-8a9a-e8aa0c8ae3f3.png)
 
+### Method 1: Using a Procedure
+- A temporary table is created by calling a procedure which stores the pizza id and the topping in a separate row by splitting the comma separated string into multiple rows.
+- String functions are used to split the string
 
 ```sql
 DROP TABLE IF EXISTS pizza_topping_temp;
 
-
 CREATE
 TEMPORARY TABLE pizza_topping_temp(pizza_id int, topping int);
 
-
 DROP PROCEDURE IF EXISTS GetToppings;
-
 
 DELIMITER $$
 CREATE PROCEDURE GetToppings()
@@ -134,6 +135,18 @@ FROM pizza_topping_temp;
 	
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/167378920-e084b0e7-69d7-4202-9d7d-cd18b93f4400.png)
+
+### Method 2: Using a JSON functions
+- JSON functions are used to split the comma separated string into multiple rows.
+
+```sql
+SELECT t.pizza_id, (j.topping)
+FROM pizza_recipes t
+JOIN json_table(trim(replace(json_array(t.toppings), ',', '","')), '$[*]' columns (topping varchar(50) PATH '$')) j ;
+```
+
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/167557792-a3bf6995-7dca-46d6-96ee-5d514b9bcdaf.png)
 
 ***
 
