@@ -1,10 +1,3 @@
-
-
-
-The column toppings in the pizza_recipes table is a comma separated string. A temporary table is created which stores the pizza id and the topping in a seperate row by splitting the comma separated string into multiple rows.
-
-
-
 # :pizza: Case Study #2: Pizza runner - Ingredient Optimisation
 
 ## Case Study Questions
