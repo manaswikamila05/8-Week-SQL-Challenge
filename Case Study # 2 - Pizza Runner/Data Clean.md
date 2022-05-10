@@ -88,10 +88,10 @@ SELECT * FROM runner_orders_temp;
 - String functions are used to split the string
 
 ```sql
-DROP TABLE IF EXISTS pizza_topping_temp;
+DROP TABLE IF EXISTS pizza_recipes_temp;
 
 CREATE
-TEMPORARY TABLE pizza_topping_temp(pizza_id int, topping int);
+TEMPORARY TABLE pizza_recipes_temp(pizza_id int, topping int);
 
 DROP PROCEDURE IF EXISTS GetToppings;
 
@@ -118,7 +118,7 @@ BEGIN
 			SET topping_out = TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(topping_in, ',', j), ',', -1));
             -- SUBSTRING_INDEX(topping_in, ',', j -> Returns a substring from a string before j occurences of comma
             -- (SUBSTRING_INDEX(SUBSTRING_INDEX(topping_in, ',', j), ',', -1)) -> Returns the last topping from the substring found above, element at -1 index
-			INSERT INTO pizza_topping_temp VALUES(id, topping_out);  -- Insert pizza_id and the topping into table pizza_info
+			INSERT INTO pizza_recipes_temp VALUES(id, topping_out);  -- Insert pizza_id and the topping into table pizza_info
 			SET j = j + 1; -- Increment the counter to find the next pizza topping in the row
         END WHILE;
         SET i = i + 1;-- Increment the counter to fetch the next row
@@ -130,7 +130,7 @@ CALL GetToppings();
 
 
 SELECT *
-FROM pizza_topping_temp;
+FROM pizza_recipes_temp;
 ``` 
 	
 #### Result set:
