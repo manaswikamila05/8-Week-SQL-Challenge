@@ -96,10 +96,29 @@ FROM
 ###  5. If a Meat Lovers pizza was $12 and Vegetarian $10 fixed prices with no cost for extras and each runner is paid $0.30 per kilometre traveled - how much money does Pizza Runner have left over after these deliveries?
 
 ```sql
-
+SELECT concat('$', round(sum(pizza_cost-delivery_cost), 2)) AS pizza_runner_revenue
+FROM
+  (SELECT order_id,
+          distance,
+          sum(pizza_cost) AS pizza_cost,
+          round(0.30*distance, 2) AS delivery_cost
+   FROM
+     (SELECT *,
+             (CASE
+                  WHEN pizza_id = 1 THEN 12
+                  ELSE 10
+              END) AS pizza_cost
+      FROM customer_orders_temp
+      INNER JOIN pizza_names USING (pizza_id)
+      INNER JOIN runner_orders_temp USING (order_id)
+      WHERE cancellation IS NULL
+      ORDER BY order_id) t1
+   GROUP BY order_id
+   ORDER BY order_id) t2;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/168251618-a7c97f22-9c0e-43d1-a4ec-1ea69e610c3d.png)
 
 ***
 
