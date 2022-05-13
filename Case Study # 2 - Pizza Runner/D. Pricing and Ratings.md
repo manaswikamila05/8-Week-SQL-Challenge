@@ -74,9 +74,9 @@ CREATE TABLE runner_rating (order_id INTEGER, rating INTEGER, review VARCHAR(100
 INSERT INTO runner_rating
 VALUES ('1', '1', 'Really bad service'),
        ('2', '1', NULL),
-       ('3', '4', 'Good service'),
-       ('4', '1', 'Pizza arrived cold and took long'),
-       ('5', '2', 'Runner was lost, delivered it after an hour'),
+       ('3', '4', 'Took too long..."),
+       ('4', '1','Runner was lost, delivered it AFTER an hour. Pizza arrived cold' ),
+       ('5', '2', ''Good service'),
        ('7', '5', 'It was great, good service and fast'),
        ('8', '2', 'He tossed it on the doorstep, poor service'),
        ('10', '5', 'Delicious!, he delivered it sooner than expected too!');
@@ -87,7 +87,7 @@ FROM runner_rating;
 ``` 
 	
 #### Result set:
-![image](https://user-images.githubusercontent.com/77529445/168259752-273ab2b7-e659-4b9f-961e-ab9c0260e581.png)
+![image](https://user-images.githubusercontent.com/77529445/168270655-61394a42-5004-459d-b056-0fde6366a960.png)
 
 ***
 
@@ -105,9 +105,24 @@ FROM runner_rating;
 
 ```sql
 
+SELECT customer_id,
+       order_id,
+       runner_id,
+       rating,
+       order_time,
+       pickup_time,
+       TIMESTAMPDIFF(MINUTE, order_time, pickup_time) pick_up_time,
+       duration AS delivery_duration,
+       round(distance*60/duration, 2) AS average_speed,
+       count(pizza_id) AS total_pizza_count
+FROM customer_orders_temp
+INNER JOIN runner_orders_temp USING (order_id)
+INNER JOIN runner_rating USING (order_id)
+GROUP BY order_id ;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/168271015-d7feb5dd-be06-4677-8e1c-6426ef6bc34c.png)
 
 ***
 
