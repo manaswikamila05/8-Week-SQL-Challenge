@@ -66,10 +66,28 @@ FROM
 ###  3. The Pizza Runner team now wants to add an additional ratings system that allows customers to rate their runner, how would you design an additional table for this new dataset - generate a schema for this new table and insert your own data for ratings for each successful customer order between 1 to 5.
 
 ```sql
+DROP TABLE IF EXISTS runner_rating;
 
+CREATE TABLE runner_rating (order_id INTEGER, rating INTEGER, review VARCHAR(100)) ;
+
+-- Order 6 and 9 were cancelled
+INSERT INTO runner_rating
+VALUES ('1', '1', 'Really bad service'),
+       ('2', '1', NULL),
+       ('3', '4', 'Good service'),
+       ('4', '1', 'Pizza arrived cold and took long'),
+       ('5', '2', 'Runner was lost, delivered it after an hour'),
+       ('7', '5', 'It was great, good service and fast'),
+       ('8', '2', 'He tossed it on the doorstep, poor service'),
+       ('10', '5', 'Delicious!, he delivered it sooner than expected too!');
+
+
+SELECT *
+FROM runner_rating;
 ``` 
 	
 #### Result set:
+![image](https://user-images.githubusercontent.com/77529445/168259752-273ab2b7-e659-4b9f-961e-ab9c0260e581.png)
 
 ***
 
