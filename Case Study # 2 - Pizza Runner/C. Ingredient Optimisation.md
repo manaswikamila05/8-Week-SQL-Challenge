@@ -43,6 +43,8 @@ INNER JOIN json_table(trim(replace(json_array(t.extras), ',', '","')),
 SELECT *
 FROM row_split_customer_orders_temp;
 ``` 
+![image](https://user-images.githubusercontent.com/77529445/168322232-dfbf27e4-519c-413d-ad8d-1b110903f7ee.png)
+
 
 ```sql
 DROP TABLE row_split_pizza_recipes_temp;
@@ -59,8 +61,12 @@ JOIN json_table(trim(replace(json_array(t.toppings), ',', '","')),
 SELECT *
 FROM row_split_pizza_recipes_temp;
 ``` 
+![image](https://user-images.githubusercontent.com/77529445/168322313-099d7901-7d46-4390-81f2-1d18605a5084.png)
+
 
 ```sql
+DROP TABLE IF EXISTS standard_ingredients;
+
 CREATE
 TEMPORARY TABLE standard_ingredients AS
 SELECT pizza_id,
@@ -71,7 +77,12 @@ INNER JOIN pizza_names USING (pizza_id)
 INNER JOIN pizza_toppings USING (topping_id)
 GROUP BY pizza_name
 ORDER BY pizza_id;
+
+SELECT *
+FROM standard_ingredients;
 ``` 
+![image](https://user-images.githubusercontent.com/77529445/168322650-34dee02f-573d-495e-a75f-eeec2c295d21.png)
+
 
 ```sql
 
