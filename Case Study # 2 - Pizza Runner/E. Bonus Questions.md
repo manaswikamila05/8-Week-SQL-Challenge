@@ -36,3 +36,7 @@ FROM pizza_names
 INNER JOIN pizza_recipes USING(pizza_id);
 ``` 
 ![image](https://user-images.githubusercontent.com/77529445/168253404-92f729d5-0db7-44e7-9cda-684ad2a879c2.png)
+
+***
+
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge) to move back to the 8-Week-SQL-Challenge repository!
