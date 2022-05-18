@@ -18,5 +18,5 @@ Each case-study folder contains the following files
 * 🥑[Case Study #3 - Foodie-Fi](https://github.com/manaswikamila05/8-Week-SQL-Challenge/tree/main/Case%20Study%20%23%203%20-%20Foodie-Fi)
 * 🪙[Case Study #4 - Data Bank](https://github.com/manaswikamila05/8-Week-SQL-Challenge/tree/main/Case%20Study%20%23%204%20-%20Data%20Bank)
 
-## 👏 Support
+## Support
 Give a ⭐️ if you like this project!
