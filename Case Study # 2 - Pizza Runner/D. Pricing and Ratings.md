@@ -155,5 +155,7 @@ FROM
 
 ***
 
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/E.%20Bonus%20Questions.md) to view the solution of E. Bonus Questions!
 
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge) to move back to the 8-Week-SQL-Challenge repository!
 
