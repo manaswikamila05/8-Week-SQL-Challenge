@@ -204,3 +204,5 @@ GROUP BY row_num;
 #### Result set:
 
 ***
+
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%202%20-%20Pizza%20Runner/D.%20Pricing%20and%20Ratings.md) to view the  solution of D. Pricing and Ratings!
