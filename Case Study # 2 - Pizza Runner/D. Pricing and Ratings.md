@@ -50,7 +50,7 @@ FROM
           sum(topping_count) AS topping_revenue
    FROM
      (SELECT *,
-             length(replace(extras, ", ", "")) AS topping_count
+             length(extras) - length(replace(extras, ",", ""))+1 AS topping_count
       FROM customer_orders_temp
       INNER JOIN pizza_names USING (pizza_id)
       INNER JOIN runner_orders_temp USING (order_id)
