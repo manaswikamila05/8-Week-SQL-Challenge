@@ -14,9 +14,17 @@ SELECT * FROM pizza_names;
 ``` 
 ![image](https://user-images.githubusercontent.com/77529445/168253501-37fa4dd6-db97-441c-b65e-e873f8080f4d.png)
 
-
+### Method 1
 ```sql
 INSERT INTO pizza_recipes VALUES(3, '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12');
+``` 
+### Method 2
+```sql
+INSERT INTO pizza_recipes
+VALUES(3, (SELECT GROUP_CONCAT(topping_id SEPARATOR ', ') FROM pizza_toppings));
+``` 
+
+```sql
 SELECT * FROM pizza_recipes;
 ``` 
 ![image](https://user-images.githubusercontent.com/77529445/168253456-9963d83b-4bc9-4f1b-8cf4-927b5d24cc5a.png)
