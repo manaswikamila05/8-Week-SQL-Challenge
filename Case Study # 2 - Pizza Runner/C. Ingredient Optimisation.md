@@ -1,4 +1,4 @@
-# :pizza: Case Study #2: Pizza runner - Ingredient Optimisation
+# :pizza: Case Study #2: Pizza runner - Ingredient Optimisation WIP
 
 ## Case Study Questions
 
