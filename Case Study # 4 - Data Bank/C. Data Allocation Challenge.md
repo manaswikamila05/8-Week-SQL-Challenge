@@ -245,3 +245,6 @@ GROUP BY txn_month;
 ![image](https://user-images.githubusercontent.com/77529445/167304936-5586815b-fd25-4245-8658-c5ab8b3c54f2.png)
 
 ***
+
+
+Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge) to move back to the 8-Week-SQL-Challenge repository!
