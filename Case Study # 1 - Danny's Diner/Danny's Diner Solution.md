@@ -88,19 +88,14 @@ WITH order_info_cte AS
           DENSE_RANK() OVER(PARTITION BY s.customer_id
                             ORDER BY s.order_date) AS rank_num
    FROM dannys_diner.sales AS s
-   JOIN dannys_diner.menu AS m ON s.product_id = m.product_id),
-     first_item AS
-  (SELECT customer_id,
-          product_name
+   JOIN dannys_diner.menu AS m ON s.product_id = m.product_id)
+  SELECT customer_id,
+          GROUP_CONCAT(DISTINCT product_name
+                    ORDER BY product_name) AS product_name
    FROM order_info_cte
    WHERE rank_num = 1
-   GROUP BY customer_id,
-            product_name)
-SELECT customer_id,
-       GROUP_CONCAT(DISTINCT product_name
-                    ORDER BY product_name) AS product_name
-FROM first_item
-GROUP BY customer_id;
+   GROUP BY customer_id
+;
 ``` 
 	
 #### Result set:
@@ -360,7 +355,18 @@ AND order_date >=join_date
 GROUP BY s.customer_id
 ORDER BY s.customer_id;
 ``` 
-	
+```sql
+SELECT s.customer_id,
+       SUM(IF(order_date BETWEEN join_date AND DATE_ADD(join_date, INTERVAL 6 DAY), price*10*2, IF(product_name = 'sushi', price*10*2, price*10))) AS customer_points
+FROM dannys_diner.menu AS m
+INNER JOIN dannys_diner.sales AS s ON m.product_id = s.product_id
+INNER JOIN dannys_diner.members AS mem USING (customer_id)
+WHERE order_date <='2021-01-31'
+  AND order_date >=join_date
+GROUP BY s.customer_id
+ORDER BY s.customer_id;
+``` 
+
 #### Result set:
 | customer_id | customer_points |
 | ----------- | --------------- |
@@ -407,7 +413,24 @@ INNER JOIN menu USING (product_id)
 ORDER BY customer_id,
          order_date;
 ``` 
-	
+```sql
+WITH data_table AS
+  (SELECT customer_id,
+          order_date,
+          product_name,
+          price,
+          IF(order_date >= join_date, 'Y', 'N') AS member
+   FROM members
+   RIGHT JOIN sales USING (customer_id)
+   INNER JOIN menu USING (product_id)
+   ORDER BY customer_id,
+            order_date)
+SELECT *,
+       IF(member='N', NULL, DENSE_RANK() OVER (PARTITION BY customer_id, member
+                                               ORDER BY order_date)) AS ranking
+FROM data_table;
+```
+
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/167407504-41d02dd0-0bd1-4a3c-8f41-00ae07daefad.png)
 
