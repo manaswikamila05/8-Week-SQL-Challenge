@@ -200,6 +200,22 @@ WHERE plan_id = 3
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/164986297-31c4e3f7-3d85-47da-8dc3-92c8182fce26.png)
 
+```sql
+WITH previous_plan_cte AS
+  (SELECT *,
+          lag(plan_id, 1) over(PARTITION BY customer_id
+                               ORDER BY start_date) AS previous_plan_id
+   FROM subscriptions
+   JOIN plans USING (plan_id))
+SELECT count(customer_id) upgraded_plan_customer_count
+FROM previous_plan_cte
+WHERE previous_plan_id<3
+  AND plan_id=3
+  AND year(start_date) = 2020;
+  ```
+![image](https://user-images.githubusercontent.com/77529445/211383914-cf0f4274-e1c6-498d-97e6-84f403d9daf5.png)
+
+  
 ***
 
 ###  9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
