@@ -139,6 +139,25 @@ ORDER BY plan_id;
 #### Result set:
 ![image](https://user-images.githubusercontent.com/77529445/164981328-0e9c6cf3-9d6e-4757-9e96-b296fff504a6.png)
 
+```sql
+WITH previous_plan_cte AS
+  (SELECT *,
+          lag(plan_id, 1) over(PARTITION BY customer_id
+                               ORDER BY start_date) AS previous_plan
+   FROM subscriptions
+   JOIN plans USING (plan_id))
+SELECT plan_name,
+       count(customer_id) customer_count,
+       round(100 *count(DISTINCT customer_id) /
+               (SELECT count(DISTINCT customer_id) AS 'distinct customers'
+                FROM subscriptions), 2) AS 'customer percentage'
+FROM previous_plan_cte
+WHERE previous_plan=0
+GROUP BY plan_name ;
+```
+#### Result set:
+![image](https://user-images.githubusercontent.com/77529445/211380460-e8e5fd61-0d14-49e6-8067-de9396f54cf7.png)
+
 ***
 
 ###  7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?
